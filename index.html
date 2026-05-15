@@ -592,6 +592,87 @@
       transform: scale(1.1);
     }
     .play-btn svg { width: 20px; height: 20px; margin-left: 3px; }
+    .expand-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      border: 1px solid rgba(196,197,207,0.3);
+      background: rgba(15, 37, 96, 0.8);
+      color: var(--silver);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s, border-color 0.3s;
+      z-index: 2;
+    }
+    .expand-btn:hover {
+      background: rgba(56, 68, 105, 0.95);
+      transform: scale(1.03);
+    }
+    #video-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 14, 28, 0.92);
+      padding: 2rem;
+      z-index: 2000;
+    }
+    #video-modal.open { display: flex; }
+    #video-modal-content {
+      width: min(1200px, 100%);
+      max-height: 100%;
+      display: grid;
+      gap: 1rem;
+      width: 100%;
+    }
+    #video-modal-player {
+      width: 100%;
+      max-height: 75vh;
+      background: black;
+      border-radius: 1rem;
+      outline: none;
+    }
+    #video-modal-close {
+      align-self: start;
+      justify-self: end;
+      background: transparent;
+      border: none;
+      color: var(--silver);
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.65rem;
+      border: 1px solid rgba(196,197,207,0.25);
+      border-radius: 999px;
+    }
+    #video-modal-close svg { width: 14px; height: 14px; }
+    #video-modal-controls {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #video-modal-controls button {
+      border: 1px solid rgba(196,197,207,0.35);
+      background: rgba(29,37,64,0.85);
+      color: var(--silver);
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.25s, color 0.25s, transform 0.25s;
+      font-size: 0.85rem;
+    }
+    #video-modal-controls button:hover {
+      background: rgba(56,68,105,0.95);
+      transform: translateY(-1px);
+    }
     .video-label {
       font-size: 0.65rem;
       letter-spacing: 0.18em;
@@ -862,18 +943,35 @@
   <div id="lb-counter"></div>
 </div>
 
+<div id="video-modal" role="dialog" aria-modal="true" aria-label="Video viewer">
+  <div id="video-modal-content">
+    <button id="video-modal-close" type="button" aria-label="Close video viewer">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2">
+        <path d="M1 1l12 12M13 1L1 13" stroke-linecap="round"/>
+      </svg>
+      Close
+    </button>
+    <video id="video-modal-player" controls playsinline></video>
+    <div id="video-modal-controls">
+      <button type="button" data-action="rewind">Rewind 10s</button>
+      <button type="button" data-action="stop">Stop</button>
+      <button type="button" data-action="forward">Forward 10s</button>
+    </div>
+  </div>
+</div>
+
 <!-- ─── VIDEOS ────────────────────────────────────────── -->
 <section id="videos">
   <p class="section-label reveal">Content</p>
   <h2 class="section-title reveal reveal-delay-1">Video Work</h2>
   <p style="margin-top:0.5rem;color:var(--cool-gray);font-size:0.9rem;" class="reveal reveal-delay-2">
-    Click any card to play
+    Click any card to play or use the controls to pause, volume, and rewind.
   </p>
 
   <div class="video-grid">
 
     <div class="video-wrap reveal" data-src="video-1.mp4">
-      <video title="Video 1" preload="metadata" muted playsinline>
+      <video title="Video 1" preload="metadata" muted playsinline controls>
         <source src="video-1.mp4" type="video/mp4" />
         Your browser does not support HTML5 video.
       </video>
@@ -886,10 +984,13 @@
         <span class="video-number">01</span>
         <span class="video-label">Play</span>
       </div>
+      <button class="expand-btn" type="button" aria-label="Expand video">
+        Expand
+      </button>
     </div>
 
     <div class="video-wrap reveal reveal-delay-1" data-src="video-2.mp4">
-      <video title="Video 2" preload="metadata" muted playsinline>
+      <video title="Video 2" preload="metadata" muted playsinline controls>
         <source src="video-2.mp4" type="video/mp4" />
         Your browser does not support HTML5 video.
       </video>
@@ -902,10 +1003,13 @@
         <span class="video-number">02</span>
         <span class="video-label">Play</span>
       </div>
+      <button class="expand-btn" type="button" aria-label="Expand video">
+        Expand
+      </button>
     </div>
 
     <div class="video-wrap reveal reveal-delay-2" data-src="video-3.mp4">
-      <video title="Video 3" preload="metadata" muted playsinline>
+      <video title="Video 3" preload="metadata" muted playsinline controls>
         <source src="video-3.mp4" type="video/mp4" />
         Your browser does not support HTML5 video.
       </video>
@@ -918,6 +1022,9 @@
         <span class="video-number">03</span>
         <span class="video-label">Play</span>
       </div>
+      <button class="expand-btn" type="button" aria-label="Expand video">
+        Expand
+      </button>
     </div>
 
   </div>
@@ -1031,26 +1138,76 @@
   });
 
   /* ── Video play */
+  const videoModal = document.getElementById('video-modal');
+  const videoModalPlayer = document.getElementById('video-modal-player');
+  const videoModalClose = document.getElementById('video-modal-close');
+  const videoModalControls = document.getElementById('video-modal-controls');
+
+  function openVideoModal(sourceVideo) {
+    const src = sourceVideo.currentSrc || sourceVideo.querySelector('source').src;
+    if (!src) return;
+    sourceVideo.pause();
+    videoModalPlayer.src = src;
+    videoModalPlayer.currentTime = sourceVideo.currentTime || 0;
+    videoModalPlayer.muted = false;
+    videoModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    videoModalPlayer.play().catch(() => {});
+  }
+
+  function closeVideoModal() {
+    videoModal.classList.remove('open');
+    videoModalPlayer.pause();
+    videoModalPlayer.src = '';
+    document.body.style.overflow = '';
+  }
+
+  videoModalClose.addEventListener('click', closeVideoModal);
+  videoModal.addEventListener('click', e => {
+    if (e.target === videoModal) closeVideoModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (!videoModal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeVideoModal();
+  });
+
+  videoModalControls.addEventListener('click', e => {
+    const action = e.target.closest('button')?.dataset.action;
+    if (!action) return;
+    if (action === 'rewind') videoModalPlayer.currentTime = Math.max(0, videoModalPlayer.currentTime - 10);
+    if (action === 'forward') videoModalPlayer.currentTime = Math.min(videoModalPlayer.duration || 0, videoModalPlayer.currentTime + 10);
+    if (action === 'stop') {
+      videoModalPlayer.pause();
+      videoModalPlayer.currentTime = 0;
+    }
+  });
+
   document.querySelectorAll('.video-wrap').forEach(wrap => {
     const video = wrap.querySelector('video');
-    wrap.addEventListener('click', () => {
-      if (wrap.classList.contains('playing')) return;
-      const src = wrap.dataset.src;
-      if (!src) {
-        alert('วิดีโอไม่ได้ตั้งค่า source ไว้');
-        return;
+    const expandBtn = wrap.querySelector('.expand-btn');
+
+    expandBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      openVideoModal(video);
+    });
+
+    wrap.addEventListener('click', e => {
+      if (e.target.closest('.expand-btn')) return;
+      if (e.target.closest('button')) return;
+      if (video.paused) {
+        video.play().catch(() => {
+          video.muted = true;
+          video.play();
+        });
+      } else {
+        video.pause();
       }
-      video.src = src;
-      video.muted = false;
-      video.play().catch(() => {
-        video.muted = true;
-        video.play();
-      });
-      wrap.classList.add('playing');
     });
-    video.addEventListener('ended', () => {
-      wrap.classList.remove('playing');
-    });
+
+    video.addEventListener('click', e => e.stopPropagation());
+    video.addEventListener('play', () => wrap.classList.add('playing'));
+    video.addEventListener('pause', () => wrap.classList.remove('playing'));
+    video.addEventListener('ended', () => wrap.classList.remove('playing'));
   });
 </script>
 
