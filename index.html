@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MU Republic · Jitchaya Hirunsri</title>
+  <meta name="description" content="MU Republic — Mahidol University Content & Branding by Jitchaya Hirunsri" />
+  <meta property="og:title" content="MU Republic · Jitchaya Hirunsri" />
+  <meta property="og:description" content="Content & Branding — Mahidol University" />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────── */
+    :root {
+      --dark-navy:    #1D2540;
+      --deep-navy:    #0F2560;
+      --silver:       #C4C5CF;
+      --slate:        #6B7490;
+      --indigo-slate: #384469;
+      --near-black:   #1A1A1E;
+      --cool-gray:    #93979F;
+      --white:        #EEEEF2;
+
+      --font-head: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --nav-h: 68px;
+    }
+
+    /* ─── RESET ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--dark-navy);
+      color: var(--silver);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    iframe { border: none; }
+
+    /* ─── NOISE OVERLAY ──────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── SCROLL ANIMATIONS ──────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── NAVBAR ─────────────────────────────────────── */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      background: rgba(29, 37, 64, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(107, 116, 144, 0.15);
+      transition: background 0.4s;
+    }
+    #navbar.scrolled {
+      background: rgba(26, 26, 30, 0.95);
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--silver);
+      letter-spacing: 0.02em;
+    }
+    .nav-logo span { color: var(--slate); font-style: italic; font-weight: 400; }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cool-gray);
+      transition: color 0.25s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--slate);
+      transition: width 0.3s var(--ease-out);
+    }
+    .nav-links a:hover { color: var(--silver); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px; height: 1.5px;
+      background: var(--silver);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: var(--nav-h); left: 0; right: 0;
+      background: rgba(26, 26, 30, 0.98);
+      backdrop-filter: blur(20px);
+      padding: 2rem;
+      flex-direction: column;
+      gap: 1.5rem;
+      z-index: 99;
+      border-bottom: 1px solid rgba(107,116,144,0.15);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--silver);
+      letter-spacing: 0.06em;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(107,116,144,0.1);
+    }
+
+    /* ─── SECTION BASE ───────────────────────────────── */
+    section {
+      padding: clamp(5rem, 10vh, 9rem) clamp(1.5rem, 8vw, 8rem);
+    }
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 3rem;
+      height: 1px;
+      background: var(--indigo-slate);
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 700;
+      color: var(--silver);
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ─── HERO ───────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: clamp(4rem, 10vh, 8rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(15, 37, 96, 0.6) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 70% at 20% 80%, rgba(56, 68, 105, 0.3) 0%, transparent 60%),
+        var(--dark-navy);
+    }
+    .hero-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(107,116,144,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(107,116,144,0.05) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 2rem;
+      height: 1px;
+      background: var(--slate);
+    }
+    .hero-title {
+      font-family: var(--font-head);
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 900;
+      line-height: 0.9;
+      color: var(--silver);
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title em {
+      display: block;
+      font-style: italic;
+      color: var(--slate);
+      font-weight: 400;
+    }
+    .hero-sub {
+      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+      color: var(--cool-gray);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      max-width: 420px;
+      line-height: 1.8;
+      margin-bottom: 3rem;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--silver);
+      border: 1px solid rgba(107,116,144,0.4);
+      padding: 1rem 2rem;
+      transition: background 0.3s, border-color 0.3s, gap 0.3s;
+    }
+    .hero-cta:hover {
+      background: rgba(107,116,144,0.1);
+      border-color: var(--slate);
+      gap: 1.25rem;
+    }
+    .hero-cta svg { transition: transform 0.3s; }
+    .hero-cta:hover svg { transform: translateX(4px); }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      right: clamp(1.5rem, 5vw, 4rem);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--slate);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--slate));
+      animation: scrollDrop 2s ease-in-out infinite;
+    }
+    @keyframes scrollDrop {
+      0%, 100% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+    }
+
+    /* ─── PROFILE ────────────────────────────────────── */
+    #profile {
+      background: var(--near-black);
+      border-top: 1px solid rgba(107,116,144,0.1);
+      border-bottom: 1px solid rgba(107,116,144,0.1);
+    }
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 6rem;
+      align-items: center;
+      max-width: 1100px;
+    }
+    .profile-name {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      color: var(--silver);
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+    .profile-uni {
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--slate);
+      margin-bottom: 2.5rem;
+    }
+    .profile-bio {
+      color: var(--cool-gray);
+      font-size: 1rem;
+      line-height: 1.9;
+      max-width: 480px;
+      margin-bottom: 3rem;
+    }
+    .contact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .contact-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+      color: var(--cool-gray);
+      padding: 0.9rem 1.2rem;
+      border: 1px solid rgba(107,116,144,0.15);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .contact-list li:hover {
+      border-color: rgba(107,116,144,0.4);
+      background: rgba(56,68,105,0.15);
+    }
+    .contact-icon {
+      width: 36px; height: 36px;
+      background: rgba(56,68,105,0.3);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-icon svg { width: 16px; height: 16px; }
+    .contact-label { font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--slate); display: block; }
+    .contact-value { color: var(--silver); font-size: 0.95rem; }
+
+    /* Profile photo */
+    .profile-photo-wrap {
+      position: relative;
+    }
+    .profile-photo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, var(--slate), transparent 60%);
+      z-index: 0;
+    }
+    .profile-photo {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      background: var(--indigo-slate);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .photo-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: linear-gradient(145deg, var(--indigo-slate) 0%, var(--deep-navy) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: var(--slate);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+    .photo-placeholder svg { opacity: 0.4; }
+    .profile-photo-accent {
+      position: absolute;
+      bottom: -1.5rem;
+      right: -1.5rem;
+      width: 80px; height: 80px;
+      border: 1px solid rgba(107,116,144,0.3);
+      z-index: 0;
+    }
+
+    /* ─── GALLERY ────────────────────────────────────── */
+    #photos {
+      background: var(--dark-navy);
+    }
+    .gallery-header { margin-bottom: 3rem; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 1;
+      background: var(--indigo-slate);
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--ease-out), filter 0.4s;
+      filter: saturate(0.7);
+    }
+    .gallery-item:hover img {
+      transform: scale(1.06);
+      filter: saturate(1);
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 37, 96, 0.6);
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay svg { color: var(--white); width: 32px; height: 32px; }
+
+    /* Photo placeholder tiles */
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, var(--indigo-slate), var(--deep-navy));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--slate);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      font-family: var(--font-head);
+      font-style: italic;
+    }
+
+    /* ─── LIGHTBOX ───────────────────────────────────── */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 26, 30, 0.97);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      animation: lbIn 0.35s var(--ease-out);
+    }
+    @keyframes lbIn {
+      from { opacity: 0; transform: scale(0.93); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    #lb-close {
+      position: fixed;
+      top: 1.5rem; right: 2rem;
+      color: var(--cool-gray);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    #lb-close:hover { color: var(--silver); }
+    #lb-counter {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      color: var(--slate);
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── VIDEOS ─────────────────────────────────────── */
+    #videos {
+      background: var(--near-black);
+      border-top: 1px solid rgba(107,116,144,0.1);
+    }
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .video-wrap {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: var(--indigo-slate);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .video-wrap video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: black;
+    }
+    .video-wrap.playing video {
+      opacity: 1;
+    }
+    .video-thumb {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, rgba(15,37,96,0.9), rgba(56,68,105,0.7));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      transition: opacity 0.3s;
+    }
+    .video-number {
+      font-family: var(--font-head);
+      font-size: 0.85rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      opacity: 0.75;
+    }
+    .video-wrap.playing .video-thumb { opacity: 0; pointer-events: none; }
+    .play-btn {
+      width: 56px; height: 56px;
+      border: 1.5px solid rgba(196,197,207,0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s, border-color 0.3s, transform 0.3s;
+    }
+    .video-wrap:hover .play-btn {
+      background: rgba(107,116,144,0.25);
+      border-color: var(--silver);
+      transform: scale(1.1);
+    }
+    .play-btn svg { width: 20px; height: 20px; margin-left: 3px; }
+    .video-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--slate);
+    }
+    .video-id-hint {
+      position: absolute;
+      bottom: 0.75rem;
+      left: 0.75rem;
+      font-size: 0.6rem;
+      color: rgba(107,116,144,0.5);
+      font-family: monospace;
+      pointer-events: none;
+    }
+
+    /* ─── CONTACT / FOOTER ───────────────────────────── */
+    #contact {
+      background: var(--deep-navy);
+      border-top: 1px solid rgba(107,116,144,0.15);
+      text-align: center;
+    }
+    .contact-intro {
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
+      color: var(--cool-gray);
+      max-width: 420px;
+      margin: 1rem auto 3rem;
+      line-height: 1.8;
+    }
+    .social-row {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 4rem;
+    }
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 2rem;
+      border: 1px solid rgba(107,116,144,0.3);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cool-gray);
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+    }
+    .social-btn:hover {
+      border-color: var(--slate);
+      color: var(--silver);
+      background: rgba(56,68,105,0.2);
+    }
+    .social-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .footer-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(107,116,144,0.2);
+      margin: 0 auto 2rem;
+    }
+    .footer-copy {
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--slate);
+      line-height: 2;
+    }
+    .footer-copy strong { color: var(--cool-gray); font-weight: 400; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .profile-photo-wrap { max-width: 260px; margin: 0 auto; }
+      .profile-photo-accent { display: none; }
+
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .video-grid   { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAVBAR ─────────────────────────────────────────── -->
+<nav id="navbar">
+  <div class="nav-logo">MU <span>Republic</span></div>
+  <ul class="nav-links">
+    <li><a href="#profile">Profile</a></li>
+    <li><a href="#photos">Photos</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#profile" class="mm-link">Profile</a>
+  <a href="#photos"  class="mm-link">Photos</a>
+  <a href="#videos"  class="mm-link">Videos</a>
+  <a href="#contact" class="mm-link">Contact</a>
+</div>
+
+<!-- ─── HERO ──────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-grid-lines" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow reveal">Mahidol University</p>
+    <h1 class="hero-title reveal reveal-delay-1">
+      MU<br/><em>Republic</em>
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      Content creation & branding<br/>crafted with editorial precision.
+    </p>
+    <a href="#profile" class="hero-cta reveal reveal-delay-3">
+      View Work
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+
+  <div class="hero-scroll-hint" aria-hidden="true">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ─── PROFILE ───────────────────────────────────────── -->
+<section id="profile">
+  <div class="profile-grid">
+    <div>
+      <p class="section-label reveal">About</p>
+      <h2 class="profile-name reveal reveal-delay-1">Jitchaya<br/>Hirunsri</h2>
+      <p class="profile-uni reveal reveal-delay-2">Mahidol University</p>
+      <p class="profile-bio reveal reveal-delay-2">
+        Content creator and brand strategist based at Mahidol University.
+        Specializing in visual storytelling, branding, and digital media
+        that speaks with clarity and intention.
+      </p>
+      <ul class="contact-list reveal reveal-delay-3">
+        <li>
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+            </svg>
+          </div>
+          <div>
+            <span class="contact-label">Phone</span>
+            <span class="contact-value">063-145-6454</span>
+          </div>
+        </li>
+        <li>
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <span class="contact-label">Line</span>
+            <span class="contact-value">jitchaya.h</span>
+          </div>
+        </li>
+        <li>
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"/>
+            </svg>
+          </div>
+          <div>
+            <span class="contact-label">Instagram</span>
+            <span class="contact-value">@thenorpor</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="profile-photo-wrap reveal reveal-delay-2">
+      <img class="profile-photo" src="1.jpg" alt="Profile photo" />
+      <div class="profile-photo-accent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GALLERY ────────────────────────────────────────── -->
+<section id="photos">
+  <div class="gallery-header">
+    <p class="section-label reveal">Visual</p>
+    <h2 class="section-title reveal reveal-delay-1">Gallery</h2>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="gallery-item reveal" data-src="2.JPG">
+      <img src="2.JPG" alt="Gallery 02" />
+      <div class="gallery-overlay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-1" data-src="3.JPG">
+      <img src="3.JPG" alt="Gallery 03" />
+      <div class="gallery-overlay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-2" data-src="4.JPG">
+      <img src="4.JPG" alt="Gallery 04" />
+      <div class="gallery-overlay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-1" data-src="5.PNG">
+      <img src="5.PNG" alt="Gallery 05" />
+      <div class="gallery-overlay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-2" data-src="6.PNG">
+      <img src="6.PNG" alt="Gallery 06" />
+      <div class="gallery-overlay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="gallery-item reveal reveal-delay-3" data-src="7.PNG">
+      <img src="7.PNG" alt="Gallery 07" />
+      <div class="gallery-overlay">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── LIGHTBOX ──────────────────────────────────────── -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div id="lb-close" role="button" tabindex="0">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    Close
+  </div>
+  <img id="lb-img" src="" alt="Gallery photo" />
+  <div id="lb-counter"></div>
+</div>
+
+<!-- ─── VIDEOS ────────────────────────────────────────── -->
+<section id="videos">
+  <p class="section-label reveal">Content</p>
+  <h2 class="section-title reveal reveal-delay-1">Video Work</h2>
+  <p style="margin-top:0.5rem;color:var(--cool-gray);font-size:0.9rem;" class="reveal reveal-delay-2">
+    Click any card to play
+  </p>
+
+  <div class="video-grid">
+
+    <div class="video-wrap reveal" data-src="video-1.mp4">
+      <video title="Video 1" preload="metadata" muted playsinline>
+        <source src="video-1.mp4" type="video/mp4" />
+        Your browser does not support HTML5 video.
+      </video>
+      <div class="video-thumb">
+        <div class="play-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" color="#C4C5CF">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+        <span class="video-number">01</span>
+        <span class="video-label">Play</span>
+      </div>
+    </div>
+
+    <div class="video-wrap reveal reveal-delay-1" data-src="video-2.mp4">
+      <video title="Video 2" preload="metadata" muted playsinline>
+        <source src="video-2.mp4" type="video/mp4" />
+        Your browser does not support HTML5 video.
+      </video>
+      <div class="video-thumb">
+        <div class="play-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" color="#C4C5CF">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+        <span class="video-number">02</span>
+        <span class="video-label">Play</span>
+      </div>
+    </div>
+
+    <div class="video-wrap reveal reveal-delay-2" data-src="video-3.mp4">
+      <video title="Video 3" preload="metadata" muted playsinline>
+        <source src="video-3.mp4" type="video/mp4" />
+        Your browser does not support HTML5 video.
+      </video>
+      <div class="video-thumb">
+        <div class="play-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" color="#C4C5CF">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+        <span class="video-number">03</span>
+        <span class="video-label">Play</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── CONTACT / FOOTER ──────────────────────────────── -->
+<section id="contact">
+  <p class="section-label reveal" style="justify-content:center;">Connect</p>
+  <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">
+    Let's Work<br/>Together
+  </h2>
+  <p class="contact-intro reveal reveal-delay-2">
+    Reach out for collaborations, content projects,
+    or branding work. Always open to good stories.
+  </p>
+
+  <div class="social-row reveal reveal-delay-3">
+    <a href="https://instagram.com/murepublic.co" target="_blank" rel="noopener" class="social-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01"/>
+      </svg>
+      Instagram · murepublic.co
+    </a>
+    <a href="https://tiktok.com/@murepublic.co" target="_blank" rel="noopener" class="social-btn">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.26 8.26 0 004.83 1.54V6.78a4.85 4.85 0 01-1.06-.09z"/>
+      </svg>
+      TikTok · murepublic.co
+    </a>
+  </div>
+
+  <div class="footer-divider"></div>
+  <p class="footer-copy reveal">
+    <strong>MU Republic</strong><br/>
+    © 2025 Jitchaya Hirunsri · Mahidol University<br/>
+    Content & Branding
+  </p>
+</section>
+
+<!-- ─── SCRIPTS ───────────────────────────────────────── -->
+<script>
+  /* ── Navbar scroll */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  /* ── Hamburger */
+  const ham = document.getElementById('hamburger');
+  const mob = document.getElementById('mobile-menu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    mob.classList.toggle('open');
+  });
+  document.querySelectorAll('.mm-link').forEach(l => {
+    l.addEventListener('click', () => {
+      ham.classList.remove('open');
+      mob.classList.remove('open');
+    });
+  });
+
+  /* ── Scroll reveal */
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => revealObserver.observe(el));
+
+  /* ── Lightbox */
+  const lightbox  = document.getElementById('lightbox');
+  const lbImg     = document.getElementById('lb-img');
+  const lbCounter = document.getElementById('lb-counter');
+  const lbClose   = document.getElementById('lb-close');
+
+  const galleryItems = document.querySelectorAll('.gallery-item');
+  let currentIdx = 0;
+
+  function openLightbox(idx) {
+    currentIdx = idx;
+    const item = galleryItems[idx];
+    const imgEl = item.querySelector('img');
+    lbImg.src = imgEl ? imgEl.src : item.dataset.src;
+    lbCounter.textContent = `${idx + 1} / ${galleryItems.length}`;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    lbImg.src = '';
+    document.body.style.overflow = '';
+  }
+
+  galleryItems.forEach((item, i) => {
+    item.addEventListener('click', () => openLightbox(i));
+  });
+
+  lbClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') openLightbox((currentIdx + 1) % galleryItems.length);
+    if (e.key === 'ArrowLeft')  openLightbox((currentIdx - 1 + galleryItems.length) % galleryItems.length);
+  });
+
+  /* ── Video play */
+  document.querySelectorAll('.video-wrap').forEach(wrap => {
+    const video = wrap.querySelector('video');
+    wrap.addEventListener('click', () => {
+      if (wrap.classList.contains('playing')) return;
+      const src = wrap.dataset.src;
+      if (!src) {
+        alert('วิดีโอไม่ได้ตั้งค่า source ไว้');
+        return;
+      }
+      video.src = src;
+      video.muted = false;
+      video.play().catch(() => {
+        video.muted = true;
+        video.play();
+      });
+      wrap.classList.add('playing');
+    });
+    video.addEventListener('ended', () => {
+      wrap.classList.remove('playing');
+    });
+  });
+</script>
+
+</body>
+</html>
